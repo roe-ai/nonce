@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versions match the tag
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          grep -q "^version = \"$v\"$" backend/pyproject.toml || { echo "backend/pyproject.toml is not at $v"; exit 1; }
+          grep -q "\"version\": \"$v\"" web/package.json || { echo "web/package.json is not at $v"; exit 1; }
+          grep -q "^## \[$v\]" CHANGELOG.md || { echo "CHANGELOG.md has no $v section"; exit 1; }
+
+      - uses: astral-sh/setup-uv@v6
+      - name: Backend tests
+        working-directory: backend
+        run: uv run pytest -q
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Dashboard checks
+        working-directory: web
+        run: npm ci && npx tsc --noEmit && npx eslint app components lib
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          awk -v v="$v" '/^## \[/ { on = index($0, "[" v "]") > 0; next } /^\[[^]]+\]: / { next } on' CHANGELOG.md > notes.md
+          gh release create "$GITHUB_REF_NAME" --title "nonce $GITHUB_REF_NAME" --notes-file notes.md --verify-tag

@@ -1,0 +1,23 @@
+# secrets: never commit real env files
+.env*
+!.env.example
+
+# node / next.js (web/)
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+
+# python (backend/)
+.venv/
+__pycache__/
+.pytest_cache/
+*.db
+*.db-*
+.demo-agents.json
+
+# misc
+.DS_Store
+*.pem
