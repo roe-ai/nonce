@@ -564,12 +564,14 @@ async def search(agent: dict, source_id: str, grant_token: str, query: str = "",
         raise AccessError("grant_revoked", f"nonce revoked this grant: {decision.reason}. Tell the user.")
 
     conns = await _accounts_for(agent["user_id"], grant)
+    # Raw ids always belong to the grant's original connection, even if it is no longer active.
+    tag_accounts = len(conns) > 1 or conns[0]["id"] != grant["connection_id"]
     batches = await asyncio.gather(*(_provider_for(c).search(grant["query_constraint"], query, limit) for c in conns))
     results = _interleave([[(c, item) for item in batch] for c, batch in zip(conns, batches, strict=True)], limit)
     if results:
         await db.q(
             f"INSERT OR IGNORE INTO grant_messages (grant_id, message_id) VALUES {', '.join(['(?, ?)'] * len(results))}",
-            *[v for c, item in results for v in (grant["id"], _item_id(c, item.id, len(conns) > 1))],
+            *[v for c, item in results for v in (grant["id"], _item_id(c, item.id, tag_accounts))],
         )
     await _use_call(grant)
     detail["result_count"] = len(results)
@@ -585,7 +587,7 @@ async def search(agent: dict, source_id: str, grant_token: str, query: str = "",
         )
     key = {"gmail": "messages", "calendar": "events", "drive": "files", "slack": "messages"}[src.id]
     return {
-        key: [_tagged(item.view(grant["scopes"]), c, len(conns) > 1) for c, item in results],
+        key: [_tagged(item.view(grant["scopes"]), c, tag_accounts) for c, item in results],
         "grant": {"expires_in_s": max(0, int(grant["expires_at"] - db.now())), "calls_left": grant["max_calls"] - grant["calls_used"] - 1},
     }
 
@@ -613,7 +615,8 @@ async def read(agent: dict, source_id: str, grant_token: str, item_id: str) -> d
     item = await _provider_for(conn).get(raw_id, content=with_content)
     if not item:
         raise AccessError("not_found", f"That {src.item} wasn't found", 404)
-    view = _tagged(item.view(grant["scopes"], full=True), conn, len(conns) > 1)
+    # Preserve the id returned by search; the active account count may have changed since then.
+    view = _tagged(item.view(grant["scopes"], full=True), conn, bool(tagged))
     signals = None
     decision, reason = "allow", "Within the access you gave"
     if with_content:
@@ -635,14 +638,14 @@ async def read(agent: dict, source_id: str, grant_token: str, item_id: str) -> d
     return {{"gmail": "message", "calendar": "event", "drive": "file", "slack": "message"}[src.id]: view}
 
 
-def _item_id(conn: dict, item_id: str, several: bool) -> str:
-    return f"{conn['id']}{ITEM_SEP}{item_id}" if several else item_id
+def _item_id(conn: dict, item_id: str, tag_account: bool) -> str:
+    return f"{conn['id']}{ITEM_SEP}{item_id}" if tag_account else item_id
 
 
-def _tagged(view: dict[str, Any], conn: dict, several: bool) -> dict[str, Any]:
-    """With several accounts, an item's id names its account and the app sees which one it's from."""
-    if several:
-        view["id"] = _item_id(conn, view["id"], several)
+def _tagged(view: dict[str, Any], conn: dict, tag_account: bool) -> dict[str, Any]:
+    """Qualify an item's id with its account and show the app which account it is from."""
+    if tag_account:
+        view["id"] = _item_id(conn, view["id"], tag_account)
         view["account"] = conn["account"]
     return view
 

@@ -101,6 +101,85 @@ async def test_pausing_an_account_cuts_it_off_and_ends_access_left_with_none(det
         await c.post(f"/admin/connections/{ids[WORK]}/resume")
 
 
+@pytest.mark.parametrize("action", ["pause", "remove"])
+async def test_remaining_account_search_stays_readable_when_first_account_leaves(detector, action):
+    agent, _ = await broker.create_agent(USER, "Remaining inbox")
+    g = await broker.request_access(
+        agent, user_request="Flights?", justification="Find", query="from:united.com",
+        scopes=["gmail.metadata", "gmail.body"],
+    )
+    ids = await _ids()
+    home = await db.one("SELECT * FROM connections WHERE id = ?", ids[HOME])
+    try:
+        async with client() as c:
+            if action == "pause":
+                response = await c.post(f"/admin/connections/{ids[HOME]}/pause")
+            else:
+                response = await c.delete(f"/admin/connections/{ids[HOME]}")
+            assert response.status_code == 200
+        assert (await broker.check_access(agent, g["grant_token"]))["status"] == "active"
+
+        found = (await broker.gmail_search(agent, g["grant_token"]))["messages"]
+        assert len(found) == 1 and found[0]["to"] == WORK
+        opened = (await broker.gmail_read(agent, g["grant_token"], found[0]["id"]))["message"]
+        assert opened["id"] == found[0]["id"]
+        assert opened["to"] == WORK and opened["account"] == WORK
+        assert opened["body"] == "Your flight"
+        reopened = (await broker.gmail_read(agent, g["grant_token"], opened["id"]))["message"]
+        assert reopened["id"] == found[0]["id"] and reopened["to"] == WORK
+    finally:
+        await db.update("connections", ids[HOME], status=home["status"], credentials_enc=home["credentials_enc"])
+
+
+async def test_tagged_item_keeps_its_id_after_another_account_is_paused(detector):
+    agent, _ = await broker.create_agent(USER, "Tagged item")
+    g = await broker.request_access(
+        agent, user_request="Flights?", justification="Find", query="from:united.com",
+        scopes=["gmail.metadata", "gmail.body"],
+    )
+    found = (await broker.gmail_search(agent, g["grant_token"]))["messages"]
+    work_item = next(m for m in found if m["account"] == WORK)
+    ids = await _ids()
+    try:
+        async with client() as c:
+            assert (await c.post(f"/admin/connections/{ids[HOME]}/pause")).status_code == 200
+        assert (await broker.check_access(agent, g["grant_token"]))["status"] == "active"
+
+        opened = (await broker.gmail_read(agent, g["grant_token"], work_item["id"]))["message"]
+        assert opened["id"] == work_item["id"]
+        assert opened["to"] == WORK and opened["account"] == WORK
+        assert opened["body"] == "Your flight"
+        reopened = (await broker.gmail_read(agent, g["grant_token"], opened["id"]))["message"]
+        assert reopened["id"] == work_item["id"] and reopened["to"] == WORK
+    finally:
+        await db.update("connections", ids[HOME], status="active")
+
+
+async def test_raw_item_keeps_its_id_after_another_account_is_resumed(detector):
+    agent, _ = await broker.create_agent(USER, "Raw item")
+    ids = await _ids()
+    try:
+        async with client() as c:
+            assert (await c.post(f"/admin/connections/{ids[WORK]}/pause")).status_code == 200
+            g = await broker.request_access(
+                agent, user_request="Flights?", justification="Find", query="from:united.com",
+                scopes=["gmail.metadata", "gmail.body"],
+            )
+            found = (await broker.gmail_search(agent, g["grant_token"]))["messages"]
+            assert len(found) == 1 and found[0]["to"] == HOME
+            assert found[0]["id"] == "same-id"
+            assert (await c.post(f"/admin/connections/{ids[WORK]}/resume")).status_code == 200
+        assert (await broker.check_access(agent, g["grant_token"]))["status"] == "active"
+
+        opened = (await broker.gmail_read(agent, g["grant_token"], found[0]["id"]))["message"]
+        assert opened["id"] == found[0]["id"]
+        assert opened["to"] == HOME and opened["body"] == "Your flight"
+        reopened = (await broker.gmail_read(agent, g["grant_token"], opened["id"]))["message"]
+        assert reopened["id"] == found[0]["id"] and reopened["to"] == HOME
+    finally:
+        await db.update("connections", ids[WORK], status="active")
+
+
 async def test_reconnecting_an_account_replaces_only_that_account():
     before = await accounts.of(USER, "gmail")
     await accounts.save(USER, "gmail", "google", HOME, "fresh")
