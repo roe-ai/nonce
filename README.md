@@ -2,7 +2,7 @@
 
 Privato sits between your personal data and the AI agents you use (ChatGPT, Claude, Cursor, your own). Agents never hold your credentials or get blanket access. When you ask an agent something that needs your email, it asks Privato for a **short-lived, filtered grant**; Privato checks every request and every call in real time, revokes access the moment an agent drifts, and pushes anything unusual to your phone for approval.
 
-Hosted at [www.anonce.io](https://www.anonce.io), or run it yourself ([Quickstart](#quickstart)).
+Hosted at [www.privato.dev](https://www.privato.dev), or run it yourself ([Quickstart](#quickstart)).
 
 Connections: Gmail, Google Calendar, Google Drive, and Slack, all read-only, with as many accounts of each as you like. You can also add your own MCP servers and HTTP APIs as connectors; Privato holds their keys and tunnels every call through the same approvals.
 
@@ -131,7 +131,7 @@ uv run python bench/run.py mypkg.detector:Mine --json
 |---|---|---|---|
 | None (everything comes to you) | 13/27 | 10/25 | – |
 | OpenAI Decisions, `gpt-6-luna`, built-in questions | 27/27 | 2/25 | 0.3 s |
-| Hosted detector (anonce.io) | 27/27 | 1/25 | 0.2 s |
+| Hosted detector (privato.dev) | 27/27 | 1/25 | 0.2 s |
 
 Without a detector every request asks you and nothing inside a grant is caught. New cases are welcome, especially ones that today's detectors get wrong.
 
@@ -174,7 +174,7 @@ Unit tests run offline with a scripted detector: `cd backend && uv run pytest`.
 
 ## Connect an agent
 
-Paste the MCP URL (`PUBLIC_URL` + `/mcp`, e.g. `https://api.anonce.io/mcp`) into the app as a connector: ChatGPT (Settings → Apps & Connectors → Create, OAuth), Claude (Settings → Connectors → Add custom connector), Cursor, or any MCP client that supports OAuth. The app registers itself, opens a Privato page where you sign in and click **Allow**, and from then on holds a one-hour access token that it refreshes. The app appears under **AI apps**; removing it there revokes its tokens.
+Paste the MCP URL (`PUBLIC_URL` + `/mcp`, e.g. `https://api.privato.dev/mcp`) into the app as a connector: ChatGPT (Settings → Apps & Connectors → Create, OAuth), Claude (Settings → Connectors → Add custom connector), Cursor, or any MCP client that supports OAuth. The app registers itself, opens a Privato page where you sign in and click **Allow**, and from then on holds a one-hour access token that it refreshes. The app appears under **AI apps**; removing it there revokes its tokens.
 
 Under the hood this is the MCP authorization spec: OAuth 2.1 with PKCE, dynamic client registration (`/register`), and protected-resource metadata (`/.well-known/oauth-protected-resource/mcp`), so an unauthenticated call to `/mcp` returns 401 pointing the client at the sign-in flow. Access tokens are bound to the `/mcp` resource and stored hashed; refresh tokens rotate on every use, and reusing an old one fails.
 

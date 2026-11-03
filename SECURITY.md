@@ -10,7 +10,7 @@ We'll acknowledge your report within a few days, keep you posted while we fix it
 
 ## Scope
 
-This repository, and the hosted service at `app.anonce.io` and `api.anonce.io`. Especially interesting:
+This repository, and the hosted service at `app.privato.dev` and `api.privato.dev`. Especially interesting:
 
 - an AI app reading data outside its grant, or after it ended
 - getting around an approval, a revocation or a filter
