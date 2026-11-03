@@ -2,9 +2,11 @@
 
 Notable changes to Privato. Versions follow [semantic versioning](https://semver.org); each `vX.Y.Z` tag becomes a GitHub release with the notes below.
 
-## [Unreleased]
+## [0.2.0] - 2026-11-02
 
 - **Renamed from nonce to Privato.** The Python package is now `privato`, settings are `PRIVATO_*`, and new keys start with `privato_`. `NONCE_*` settings and `nonce_` keys keep working, so connected apps don't need to reconnect. You'll be signed out of the dashboard once.
+- **New address.** The hosted service moved to privato.dev, with the API at `api.privato.dev`. Apps connected through the old address keep working.
+- **A clearer README** that explains what Privato does before how it works.
 
 ## [0.1.0] - 2026-11-01
 

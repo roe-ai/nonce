@@ -1,6 +1,6 @@
 [project]
 name = "privato"
-version = "0.1.0"
+version = "0.2.0"
 license = "AGPL-3.0-only"
 description = "Temporary access to your personal data for AI agents"
 requires-python = ">=3.12"
