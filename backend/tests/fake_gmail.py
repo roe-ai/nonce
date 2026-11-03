@@ -2,7 +2,7 @@
 
 import shlex
 
-from nonce.providers.gmail import Message
+from privato.providers.gmail import Message
 
 from fake_inbox import INBOX
 

@@ -2,18 +2,18 @@ import asyncio
 
 import httpx
 
-from nonce import broker, db, groups, luna, sms, tasks
-from nonce.main import app
-from nonce.notify import review_link
+from privato import broker, db, groups, luna, sms, tasks
+from privato.main import app
+from privato.notify import review_link
 
 from conftest import TEST_USER
 
-ADMIN = {"Authorization": "Bearer test-admin", "X-Nonce-User": TEST_USER}
+ADMIN = {"Authorization": "Bearer test-admin", "X-Privato-User": TEST_USER}
 TRIP = "Plan my Tokyo trip next week"
 
 
 def client(user_id: str = TEST_USER) -> httpx.AsyncClient:
-    return httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers={**ADMIN, "X-Nonce-User": user_id})
+    return httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers={**ADMIN, "X-Privato-User": user_id})
 
 
 def g(id_, question, at, agent="a", task=None, category="travel"):

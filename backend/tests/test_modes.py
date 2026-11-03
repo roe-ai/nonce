@@ -4,10 +4,10 @@ from zoneinfo import ZoneInfo
 import httpx
 import pytest
 
-from nonce import broker, db, recall, sms
-from nonce.main import app
-from nonce.policy import MODES, AccessContext, decide_access, is_offline
-from nonce.sources import SOURCES
+from privato import broker, db, recall, sms
+from privato.main import app
+from privato.policy import MODES, AccessContext, decide_access, is_offline
+from privato.sources import SOURCES
 
 ADMIN = {"Authorization": "Bearer test-admin"}
 GMAIL = SOURCES["gmail"]
@@ -134,7 +134,7 @@ async def test_dashboard_sets_mode_offline_hours_and_previews_modes(fresh, detec
     await ask(agent, "When does my flight to Tokyo leave?")
     detector.access_signals["category"] = "finance"
     await ask(agent, "What was my card bill last month?", query="from:chase.com statement")
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers={**ADMIN, "X-Nonce-User": uid}) as c:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers={**ADMIN, "X-Privato-User": uid}) as c:
         assert (await c.patch(f"/admin/agents/{agent['id']}", json={"mode": "loose"})).status_code == 422
         assert (await c.patch(f"/admin/agents/{agent['id']}", json={"mode": "relaxed"})).json()["mode"] == "relaxed"
         assert [a["mode"] for a in (await c.get("/admin/agents")).json()] == ["relaxed"]
@@ -147,5 +147,5 @@ async def test_dashboard_sets_mode_offline_hours_and_previews_modes(fresh, detec
         me = (await c.put("/admin/me/offline", json={"start": 22, "end": 7, "timezone": "Europe/London"})).json()
         assert (me["offline_start"], me["offline_end"], me["timezone"]) == (22, 7, "Europe/London")
 
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers={**ADMIN, "X-Nonce-User": "user-test"}) as c:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers={**ADMIN, "X-Privato-User": "user-test"}) as c:
         assert (await c.patch(f"/admin/agents/{agent['id']}", json={"mode": "relaxed"})).status_code == 404

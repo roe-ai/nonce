@@ -18,7 +18,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <div className="grid min-h-screen place-items-center px-4">
       <div className="w-full max-w-[340px] text-center">
         <BrandMark height={24} className="mx-auto mb-6" />
-        <h1 className="text-[20px] font-semibold tracking-[-0.01em]">Welcome to nonce</h1>
+        <h1 className="text-[20px] font-semibold tracking-[-0.01em]">Welcome to Privato</h1>
         <p className="mt-1.5 text-[13px] text-muted">AI sees what it needs. Nothing else.</p>
         <form action={signInWithGoogle} className="mt-7">
           {next && <input type="hidden" name="next" value={next} />}

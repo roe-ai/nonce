@@ -32,7 +32,7 @@ async def lifespan(_: FastAPI):
         yield
 
 
-app = FastAPI(title="nonce", lifespan=lifespan)
+app = FastAPI(title="Privato", lifespan=lifespan)
 
 
 @app.exception_handler(AccessError)
@@ -131,13 +131,13 @@ app.include_router(v1)
 
 async def require_admin(authorization: str | None = Header(None)) -> None:
     token = (authorization or "").removeprefix("Bearer ").strip()
-    if not hmac.compare_digest(token, settings().nonce_admin_token):
+    if not hmac.compare_digest(token, settings().privato_admin_token):
         raise AccessError("unauthenticated", "Admin token required", 401)
 
 
-async def current_user(x_nonce_user: str | None = Header(None), x_privaty_user: str | None = Header(None)) -> dict:
+async def current_user(x_privato_user: str | None = Header(None), x_valet_user: str | None = Header(None), x_nonce_user: str | None = Header(None), x_privaty_user: str | None = Header(None)) -> dict:
     """The dashboard server names the signed-in user; only it holds the admin token."""
-    user = await db.one("SELECT * FROM users WHERE id = ?", x_nonce_user or x_privaty_user or "")
+    user = await db.one("SELECT * FROM users WHERE id = ?", x_privato_user or x_valet_user or x_nonce_user or x_privaty_user or "")
     if not user:
         raise AccessError("unauthenticated", "Sign in required", 401)
     return user
@@ -310,7 +310,7 @@ async def remove_push(body: PushEndpoint, user: User):
 
 @admin.post("/push/test")
 async def test_push(user: User):
-    sent = await webpush.send(user["id"], title="nonce is on this phone", body="You'll get a notification here when an app needs your OK.", url="/")
+    sent = await webpush.send(user["id"], title="Privato is on this phone", body="You'll get a notification here when an app needs your OK.", url="/")
     return {"sent": sent}
 
 
@@ -746,7 +746,7 @@ def _sentence(text: str) -> str:
 def _page(body: str) -> HTMLResponse:
     return HTMLResponse(
         f"""<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nonce</title><style>
+<title>Privato</title><style>
 body{{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,Inter,sans-serif;color:#1c1d1f;background:#fafafa}}
 main{{max-width:420px;margin:0 auto;padding:40px 20px}}
 .card{{background:#fff;border:1px solid #e6e6e9;border-radius:14px;padding:22px}}
@@ -756,7 +756,7 @@ ul{{margin:14px 0;padding:10px 14px 10px 28px;background:#fff8eb;border-radius:1
 .allow{{background:#1c1d1f;color:#fff;border:0}} .deny{{background:#fff;color:#1c1d1f;border:1px solid #e6e6e9}}
 .brand{{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:18px}} .meta{{font-size:14px}}
 .items{{margin:14px 0;padding:0 0 0 20px;font-size:14px}} .items li{{padding:3px 0}}
-</style></head><body><main><div class="brand">nonce</div><div class="card">{body}</div></main></body></html>"""
+</style></head><body><main><div class="brand">Privato</div><div class="card">{body}</div></main></body></html>"""
     )
 
 

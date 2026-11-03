@@ -2,13 +2,13 @@
 
 import pytest
 
-from nonce import broker
-from nonce.errors import AccessError
-from nonce.filters import combine
-from nonce.providers import drive as drive_mod
-from nonce.providers.calendar import GoogleCalendar
-from nonce.providers.drive import GoogleDrive
-from nonce.providers.slack import Slack
+from privato import broker
+from privato.errors import AccessError
+from privato.filters import combine
+from privato.providers import drive as drive_mod
+from privato.providers.calendar import GoogleCalendar
+from privato.providers.drive import GoogleDrive
+from privato.providers.slack import Slack
 
 
 
@@ -34,7 +34,7 @@ EVENTS = [
 
 
 class CalendarAPI:
-    """Google returns everything in the date window; text matching is left to nonce."""
+    """Google returns everything in the date window; text matching is left to Privato."""
 
     def __init__(self):
         self.calls: list[dict] = []
@@ -124,7 +124,7 @@ async def test_a_grant_only_works_for_its_own_source(agent, detector, calendar_a
 
 
 async def test_no_connection_means_no_grant(detector):
-    from nonce import db
+    from privato import db
 
     uid = f"user-{db.new_id()[:6]}"
     await db.insert("users", {"id": uid, "google_sub": uid, "email": f"{uid}@example.com", "created_at": db.now()})

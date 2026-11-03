@@ -15,7 +15,7 @@ const OUTCOME: Record<string, [string, string]> = {
   revoke: ["Stopped", "bg-red-50 text-red-700"],
 };
 
-/** The detector's yes/no signals (backend/nonce/signals.py), phrased so "yes" is the good answer except injection. */
+/** The detector's yes/no signals (backend/privato/signals.py), phrased so "yes" is the good answer except injection. */
 const CHECKS: [key: string, label: string, goodWhenYes: boolean][] = [
   ["user_initiated", "You asked for this", true],
   ["consistent", "Its reason matches your question", true],
@@ -45,7 +45,7 @@ function Checks({ signals }: { signals: AccessEvent["signals"] }) {
   if (!rows.length && !crawl && !category && typeof s.closest !== "string") return null;
   return (
     <section className="mt-5">
-      <h3 className="text-[12px] font-medium tracking-[0.08em] text-faint uppercase">nonce&apos;s checks</h3>
+      <h3 className="text-[12px] font-medium tracking-[0.08em] text-faint uppercase">Privato&apos;s checks</h3>
       <ul className="mt-2 divide-y divide-line rounded-xl border border-line text-[13px]">
         {rows.map(([k, label, goodWhenYes]) => {
           const p = s[k] as number;
@@ -133,7 +133,7 @@ function Detail({ e, title }: { e: AccessEvent; title: ReactNode }) {
         {scopes && <Field label={sourceId?.startsWith("connector:") ? "Tools" : "What it can read"}>{scopes.map((sc) => scopeWords(sc, !!sourceId?.startsWith("connector:"))).join(" and ")}</Field>}
         {typeof d.ttl_s === "number" && <Field label="For">{describeDuration(d.ttl_s)}</Field>}
         {verb === "search" && <Field label="Searched for">{str(d.query) ?? "Everything it was allowed to see"}</Field>}
-        {str(d.effective_query) && <Field label="Search nonce ran" mono>{str(d.effective_query)}</Field>}
+        {str(d.effective_query) && <Field label="Search Privato ran" mono>{str(d.effective_query)}</Field>}
         {count != null && <Field label="Found">{count === 0 ? "Nothing" : `${count} ${count === 1 ? (src?.items ?? "items").replace(/s$/, "") : (src?.items ?? "items")}`}</Field>}
         {str(d.title) && <Field label="Opened">“{str(d.title)}”</Field>}
         {str(d.tool) && <Field label="Tool">{str(d.tool)}{d.is_error ? " (returned an error)" : ""}</Field>}
@@ -146,7 +146,7 @@ function Detail({ e, title }: { e: AccessEvent; title: ReactNode }) {
   );
 }
 
-/** One activity step; tapping it opens everything nonce recorded about it. */
+/** One activity step; tapping it opens everything Privato recorded about it. */
 export function Step({ e, title, children }: { e: AccessEvent; title: ReactNode; children: ReactNode }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);

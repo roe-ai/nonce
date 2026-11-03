@@ -15,15 +15,15 @@ const ORDER: StepId[] = ["account", "app", "phone", "try"];
 const PROVIDERS: SourceId[] = ["gmail", "calendar", "drive", "slack"];
 const TITLES: Record<StepId, string> = {
   account: "Connect an account",
-  app: "Add nonce to your AI app",
+  app: "Add Privato to your AI app",
   phone: "Get a tap when an app asks",
   try: "Ask your first question",
 };
 const PROMPTS: Record<SourceId, string> = {
-  gmail: "Using nonce, find my most recent shipping confirmation email.",
-  calendar: "Using nonce, what's on my calendar tomorrow?",
-  drive: "Using nonce, find the doc I edited most recently.",
-  slack: "Using nonce, catch me up on my Slack mentions from today.",
+  gmail: "Using Privato, find my most recent shipping confirmation email.",
+  calendar: "Using Privato, what's on my calendar tomorrow?",
+  drive: "Using Privato, find the doc I edited most recently.",
+  slack: "Using Privato, catch me up on my Slack mentions from today.",
 };
 
 function Waiting({ children }: { children: ReactNode }) {
@@ -67,10 +67,10 @@ function Step({ n, id, current, done, summary, children }: { n: number; id: Step
 function FirstRequest({ event }: { event: AccessEvent }) {
   const outcome =
     event.decision === "allow"
-      ? "nonce let it through, for just that, for a few minutes."
+      ? "Privato let it through, for just that, for a few minutes."
       : event.decision === "ask"
-        ? "nonce is holding it for you. Allow or decline it on your dashboard."
-        : `nonce blocked it${event.reason ? `: ${event.reason.toLowerCase()}` : "."}`;
+        ? "Privato is holding it for you. Allow or decline it on your dashboard."
+        : `Privato blocked it${event.reason ? `: ${event.reason.toLowerCase()}` : "."}`;
   return (
     <div className="mt-4 rounded-xl bg-sidebar p-4">
       <p className="flex items-center gap-2 text-[13px] font-medium">
@@ -110,10 +110,10 @@ export default async function WelcomePage({
   return (
     <>
       <header className="mb-8">
-        <h1 className="font-display text-[34px] leading-tight tracking-[-0.01em]">{finished && !current ? "You're set." : "Let's set up nonce."}</h1>
+        <h1 className="font-display text-[34px] leading-tight tracking-[-0.01em]">{finished && !current ? "You're set." : "Let's set up Privato."}</h1>
         <p className="mt-1 text-muted">
           {finished && !current
-            ? "Your AI apps now ask nonce first, and only see what each question needs."
+            ? "Your AI apps now ask Privato first, and only see what each question needs."
             : "A few steps, about two minutes. AI apps will only see what you ask about, for a few minutes at a time."}
         </p>
       </header>
@@ -132,7 +132,7 @@ export default async function WelcomePage({
               {error === "access_denied" || error === "cancelled" ? `${source(failed).label} wasn't connected. You can try again.` : error}
             </p>
           )}
-          <p className="mb-4 text-[13px] text-muted">Pick what AI apps may ask about. nonce keeps the login; apps never see it, and everything is read-only.</p>
+          <p className="mb-4 text-[13px] text-muted">Pick what AI apps may ask about. Privato keeps the login; apps never see it, and everything is read-only.</p>
           <div className="divide-y divide-line rounded-xl border border-line">
             {PROVIDERS.map((id) => {
               const mine = accounts.filter((c) => c.provider === id);
@@ -155,7 +155,7 @@ export default async function WelcomePage({
           {done.app ? (
             <>
               <p className="flex items-center gap-2 text-[14px]">
-                <AppAvatar kind={app.kind} name={app.name} size={24} /> {app.name} is connected. It starts with no access, and asks nonce each time.
+                <AppAvatar kind={app.kind} name={app.name} size={24} /> {app.name} is connected. It starts with no access, and asks Privato each time.
               </p>
               <Next to={after("app")} />
             </>
@@ -169,7 +169,7 @@ export default async function WelcomePage({
 
         <Step n={3} id="phone" current={current === "phone"} done={done.phone} summary={done.phone ? "Notifications are on" : undefined}>
           <p className="mb-4 text-[13px] text-muted">
-            When an app asks for something unusual, nonce holds it until you say so. Turn on notifications to hear about it right away. For
+            When an app asks for something unusual, Privato holds it until you say so. Turn on notifications to hear about it right away. For
             your phone, open <span className="font-medium text-ink">{host ?? "this site"}</span> there and add it to your Home Screen.
           </p>
           <PhoneSetup pushKey={notifications.push_key} />
@@ -187,7 +187,7 @@ export default async function WelcomePage({
           ) : (
             <>
               <p className="mb-3 text-[13px] text-muted">
-                Ask {appName} something that needs your data. If it doesn&apos;t reach for nonce, turn nonce on in its tools or connectors menu.
+                Ask {appName} something that needs your data. If it doesn&apos;t reach for Privato, turn Privato on in its tools or connectors menu.
               </p>
               <div className="space-y-2">
                 {(providers.length ? providers : (["gmail"] as SourceId[])).map((p) => (
@@ -198,7 +198,7 @@ export default async function WelcomePage({
                   </div>
                 ))}
               </div>
-              <Waiting>Waiting for {appName} to ask. You&apos;ll see what nonce decided right here.</Waiting>
+              <Waiting>Waiting for {appName} to ask. You&apos;ll see what Privato decided right here.</Waiting>
             </>
           )}
         </Step>

@@ -3,14 +3,14 @@ from urllib.parse import parse_qs, urlsplit
 import httpx
 import pytest
 
-from nonce import accounts, broker, db, google_oauth
-from nonce.errors import AccessError
-from nonce.main import app
+from privato import accounts, broker, db, google_oauth
+from privato.errors import AccessError
+from privato.main import app
 
 from fake_gmail import FakeGmail
 
 USER = "user-two-inboxes"
-ADMIN = {"Authorization": "Bearer test-admin", "X-Nonce-User": USER}
+ADMIN = {"Authorization": "Bearer test-admin", "X-Privato-User": USER}
 HOME, WORK = "me@home.example", "me@work.example"
 
 

@@ -7,7 +7,7 @@ import { addConnector, type ConnectorFormState } from "@/app/actions";
 const input =
   "h-11 w-full rounded-lg border border-line bg-white px-3 text-[15px] outline-none placeholder:text-faint focus:border-ink/40 sm:h-9 sm:text-[14px]";
 
-/** Add an MCP server or HTTP API. nonce connects right away to list its tools. */
+/** Add an MCP server or HTTP API. Privato connects right away to list its tools. */
 export function ConnectorForm() {
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<"mcp" | "http">("mcp");
@@ -82,7 +82,7 @@ export function ConnectorForm() {
         </label>
       </div>
       <p className="text-[12px] text-faint">
-        nonce keeps the key encrypted and makes every call itself. AI apps never see it, and only reach this connector through your approvals.
+        Privato keeps the key encrypted and makes every call itself. AI apps never see it, and only reach this connector through your approvals.
       </p>
       {state?.error && <p className="text-[13px] text-red-600">{state.error}</p>}
       <div className="flex gap-2">

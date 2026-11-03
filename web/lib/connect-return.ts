@@ -15,7 +15,7 @@ export async function finishConnect(request: NextRequest, params: URLSearchParam
   };
   const code = params.get("code");
   if (!["gmail", "calendar", "drive", "slack"].includes(provider)) {
-    back.searchParams.set("error", "That sign-in link wasn't for nonce.");
+    back.searchParams.set("error", "That sign-in link wasn't for Privato.");
     return go();
   }
   if (!code) {

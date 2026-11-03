@@ -58,8 +58,8 @@ async def pick(user_id: str, src: Source, wanted: list[str] | None) -> tuple[lis
     rows = await active(user_id, src.id)
     if not rows:
         if await of(user_id, src.id):
-            raise AccessError("account_paused", f"The user paused {src.label} in nonce", 409)
-        raise AccessError("no_connection", f"The user has not connected {src.label} to nonce", 409)
+            raise AccessError("account_paused", f"The user paused {src.label} in Privato", 409)
+        raise AccessError("no_connection", f"The user has not connected {src.label} to Privato", 409)
     if not wanted:
         return rows, rows
     by_name = {(r["account"] or "").lower(): r for r in rows}

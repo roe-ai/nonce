@@ -1,4 +1,4 @@
-/** Filters and durations in words a person reads at a glance (mirrors backend/nonce/humanize.py). */
+/** Filters and durations in words a person reads at a glance (mirrors backend/privato/humanize.py). */
 
 import type { SourceId } from "./api";
 

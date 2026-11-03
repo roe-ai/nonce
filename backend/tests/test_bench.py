@@ -1,6 +1,6 @@
 from bench.run import load_cases, misses, run, score
-from nonce.signals import NoSignals
-from nonce.sources import SOURCES
+from privato.signals import NoSignals
+from privato.sources import SOURCES
 
 from conftest import SAFE_ACCESS, SAFE_SEARCH
 

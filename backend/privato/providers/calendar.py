@@ -1,6 +1,6 @@
 """Google Calendar (primary calendar), read-only.
 
-Calendar's own search is loose, so nonce asks Google for the date window and checks
+Calendar's own search is loose, so Privato asks Google for the date window and checks
 every word and attendee filter itself before an agent sees an event.
 """
 

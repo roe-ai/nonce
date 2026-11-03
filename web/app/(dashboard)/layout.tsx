@@ -9,7 +9,7 @@ function Logo() {
   return (
     <div className="flex items-center gap-2">
       <BrandMark height={15} />
-      <span className="text-[14px] font-semibold tracking-[-0.01em]">nonce</span>
+      <span className="text-[14px] font-semibold tracking-[-0.01em]">Privato</span>
     </div>
   );
 }

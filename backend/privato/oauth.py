@@ -4,7 +4,7 @@ The MCP SDK serves the protocol (metadata, dynamic client registration, /authori
 /revoke, PKCE, and the 401 that points clients at the metadata). This module stores clients,
 codes and tokens, and sends /authorize to the dashboard, where the signed-in user approves.
 Approving makes the client one of the user's AI apps; its tokens act as that app.
-Static `nonce_agent_` keys (and `pvt_agent_` ones from before the rename) keep working for clients that can send a header.
+Static `privato_agent_` keys (and `valet_agent_`, `nonce_agent_` and `pvt_agent_` ones from earlier names) keep working for clients that can send a header.
 """
 
 import secrets
@@ -69,7 +69,7 @@ def display_name(client: OAuthClientInformationFull) -> str:
 
 
 async def _issue(client_id: str, agent_id: str, scopes: list[str], resource: str | None, family: str) -> OAuthToken:
-    access, refresh = new_token("nonce_at"), new_token("nonce_rt")
+    access, refresh = new_token("privato_at"), new_token("privato_rt")
     now = db.now()
     for token, kind, ttl in ((access, "access", ACCESS_TTL_S), (refresh, "refresh", REFRESH_TTL_S)):
         await db.insert(
@@ -109,7 +109,7 @@ async def revoke_agent_tokens(agent_id: str) -> None:
     await db.q("UPDATE oauth_tokens SET revoked_at = ? WHERE agent_id = ? AND revoked_at IS NULL", db.now(), agent_id)
 
 
-class NonceOAuthProvider:
+class PrivatoOAuthProvider:
     async def get_client(self, client_id: str) -> OAuthClientInformationFull | None:
         row = await db.one("SELECT info FROM oauth_clients WHERE client_id = ?", client_id)
         return OAuthClientInformationFull.model_validate_json(row["info"]) if row else None
@@ -179,7 +179,7 @@ class NonceOAuthProvider:
         return await _issue(client.client_id, row["agent_id"], scopes or row["scopes"], row["resource"], row["family"])
 
     async def load_access_token(self, token: str) -> AccessToken | None:
-        if token.startswith(("nonce_agent_", "pvt_agent_")):
+        if token.startswith(("privato_agent_", "valet_agent_", "nonce_agent_", "pvt_agent_")):
             agent = await db.one("SELECT id, user_id, status FROM agents WHERE key_hash = ?", hash_token(token))
             if not agent or agent["status"] != "active":
                 return None
@@ -202,7 +202,7 @@ class NonceOAuthProvider:
             await db.q("UPDATE oauth_tokens SET revoked_at = ? WHERE family = ? AND revoked_at IS NULL", db.now(), row["family"])
 
 
-provider = NonceOAuthProvider()
+provider = PrivatoOAuthProvider()
 
 
 # ---------------------------------------------------------------------------
@@ -244,7 +244,7 @@ async def approve_request(user: dict, request_id: str) -> str:
                 "name": display_name(client),
                 "kind": guess_kind(client),
                 # OAuth apps have no static key; this placeholder can't be presented as one.
-                "key_hash": hash_token(new_token("nonce_oauth_placeholder")),
+                "key_hash": hash_token(new_token("privato_oauth_placeholder")),
                 "key_prefix": "oauth",
                 "status": "active",
                 "created_at": db.now(),

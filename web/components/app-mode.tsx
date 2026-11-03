@@ -28,7 +28,7 @@ const MODES: {
     ring: "ring-indigo-500",
     bar: "bg-indigo-500",
     points: [
-      "Asks unless you've asked something like it lately. nonce's agent searches your past questions to check",
+      "Asks unless you've asked something like it lately. Privato's agent searches your past questions to check",
       "Asks before an app reads whole emails, files or messages",
       "Up to 15 minutes of access without asking",
     ],
@@ -183,7 +183,7 @@ export function AppMode({
       <button
         onClick={() => setOpen(true)}
         className="-my-2.5 rounded-full py-2.5 transition-transform hover:scale-[1.03]"
-        aria-label={`Change how careful nonce is with ${name}`}
+        aria-label={`Change how careful Privato is with ${name}`}
       >
         <ModeBadge mode={selected} />
       </button>
@@ -202,7 +202,7 @@ export function AppMode({
                   <AppAvatar kind={kind} name={name} size={36} />
                   <div>
                     <h2 className="text-[16px] font-semibold">
-                      How careful should nonce be with {name}?
+                      How careful should Privato be with {name}?
                     </h2>
                     <p className="text-[13px] text-muted">
                       {saving
@@ -261,7 +261,7 @@ export function AppMode({
               </div>
 
               <p className="mt-4 text-[12px] text-faint">
-                In every mode, nonce still blocks grabs for everything and
+                In every mode, Privato still blocks grabs for everything and
                 access over 24 hours, cuts off off-topic searches, and holds
                 requests during your offline hours.
               </p>

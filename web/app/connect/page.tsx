@@ -28,7 +28,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
           <div className="text-center">
             <BrandMark height={24} className="mx-auto mb-6" />
             <h1 className="text-[18px] font-semibold">This link has expired</h1>
-            <p className="mt-1.5 text-[13px] text-muted">Go back to the app and connect nonce again. Links only last a few minutes.</p>
+            <p className="mt-1.5 text-[13px] text-muted">Go back to the app and connect Privato again. Links only last a few minutes.</p>
           </div>
         ) : (
           <>
@@ -39,7 +39,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
                 <BrandMark height={22} />
               </span>
             </div>
-            <h1 className="text-center text-[18px] font-semibold tracking-[-0.01em]">Connect {request.client_name} to nonce?</h1>
+            <h1 className="text-center text-[18px] font-semibold tracking-[-0.01em]">Connect {request.client_name} to Privato?</h1>
             <p className="mt-1.5 text-center text-[13px] text-muted">
               Signed in as <span className="text-ink">{me.email}</span>
             </p>
@@ -51,7 +51,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
               </li>
               <li className="flex gap-3">
                 <BellRing size={16} className="mt-0.5 shrink-0 text-muted" />
-                <span>nonce checks every request and asks you first when something looks off.</span>
+                <span>Privato checks every request and asks you first when something looks off.</span>
               </li>
               <li className="flex gap-3">
                 <KeyRound size={16} className="mt-0.5 shrink-0 text-muted" />

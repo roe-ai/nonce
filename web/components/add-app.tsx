@@ -31,7 +31,7 @@ export function AppSetup({ mcpUrl, onDone }: { mcpUrl: string; onDone?: () => vo
   const choice = CHOICES.find((c) => c.kind === kind)!;
 
   if (state?.key) {
-    const config = JSON.stringify({ mcpServers: { nonce: { url: mcpUrl, headers: { Authorization: `Bearer ${state.key}` } } } }, null, 2);
+    const config = JSON.stringify({ mcpServers: { privato: { url: mcpUrl, headers: { Authorization: `Bearer ${state.key}` } } } }, null, 2);
     return (
       <div>
         <p className="flex items-center gap-2 text-muted">
@@ -87,7 +87,7 @@ export function AppSetup({ mcpUrl, onDone }: { mcpUrl: string; onDone?: () => vo
           <code className="min-w-0 flex-1 truncate font-mono text-[12px]">{mcpUrl}</code>
           <CopyButton text={mcpUrl} />
         </div>
-        <p className="mt-2.5 text-[12px] text-muted">It will open nonce so you can approve it. It starts with no access.</p>
+        <p className="mt-2.5 text-[12px] text-muted">It will open Privato so you can approve it. It starts with no access.</p>
       </div>
       {state?.error && <p className="mt-2 text-[12px] text-red-600">{state.error}</p>}
       {onDone && (

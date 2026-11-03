@@ -89,7 +89,7 @@ async def send_code(phone: str) -> str | None:
     if mode == "dev":
         code = f"{secrets.randbelow(1_000_000):06d}"
         _dev_codes[phone] = hash_token(code)
-        log.warning("[nonce] Code for %s: %s  (dev mode: set TWILIO_* to send real texts)", phone, code)
+        log.warning("[Privato] Code for %s: %s  (dev mode: set TWILIO_* to send real texts)", phone, code)
         return None
     status, body = await _twilio(_verify_url("Verifications"), {"To": phone, "Channel": "sms"})
     if status < 300:
@@ -98,7 +98,7 @@ async def send_code(phone: str) -> str | None:
     if status == 400:
         return "That number can't receive texts. Check it and try again."
     if status == 403:
-        return "nonce can't text this number yet. We're finishing setup with our text provider."
+        return "Privato can't text this number yet. We're finishing setup with our text provider."
     return "Couldn't send the code. Try again in a moment."
 
 
@@ -123,7 +123,7 @@ async def send_text(phone: str, body: str) -> bool:
     if mode == "off":
         return False
     if mode == "dev":
-        log.warning("[nonce] Text to %s:\n%s", phone, body)
+        log.warning("[Privato] Text to %s:\n%s", phone, body)
         return True
     s = settings()
     sender = {"MessagingServiceSid": s.twilio_messaging_service_sid} if s.twilio_messaging_service_sid else {"From": s.twilio_from_number or ""}

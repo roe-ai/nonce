@@ -10,8 +10,8 @@ os.environ.update(
     SIGNALS_DETECTOR="",
     NTFY_TOPIC="",
     LOCAL_DB_PATH=os.path.join(_tmp, "test.db"),
-    NONCE_ENCRYPTION_KEY=Fernet.generate_key().decode(),
-    NONCE_ADMIN_TOKEN="test-admin",
+    PRIVATO_ENCRYPTION_KEY=Fernet.generate_key().decode(),
+    PRIVATO_ADMIN_TOKEN="test-admin",
     QUIET_HOURS="[0, 0]",
     SMS_ENABLED="true",
     TWILIO_ACCOUNT_SID="",
@@ -31,7 +31,7 @@ os.environ.update(
 
 import pytest  # noqa: E402
 
-from nonce import broker, db  # noqa: E402
+from privato import broker, db  # noqa: E402
 from fake_gmail import FakeGmail  # noqa: E402
 
 

@@ -1219,51 +1219,6 @@ wheels = [
 ]
 
 [[package]]
-name = "nonce"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "cryptography" },
-    { name = "fastapi" },
-    { name = "google-api-python-client" },
-    { name = "google-auth" },
-    { name = "httpx" },
-    { name = "libsql" },
-    { name = "mcp" },
-    { name = "openai-agents" },
-    { name = "pydantic-settings" },
-    { name = "pywebpush" },
-    { name = "uvicorn", extra = ["standard"] },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "cryptography", specifier = ">=50.0.2" },
-    { name = "fastapi", specifier = ">=0.162.0" },
-    { name = "google-api-python-client", specifier = ">=2.201.0" },
-    { name = "google-auth", specifier = ">=2.62.0" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "libsql", specifier = ">=0.1.11" },
-    { name = "mcp", specifier = ">=2.3.0" },
-    { name = "openai-agents", specifier = ">=0.24.0" },
-    { name = "pydantic-settings", specifier = ">=2.16.2" },
-    { name = "pywebpush", specifier = ">=2.5.0" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.54.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pytest", specifier = ">=9.2.0" },
-    { name = "pytest-asyncio", specifier = ">=1.4.1" },
-]
-
-[[package]]
 name = "openai"
 version = "3.42.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1331,6 +1286,51 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bf/db/7fc19e6f2dc92a966727031389fc2e08b558f0f25eb7403c1119ad4713cd/pluggy-1.7.0.tar.gz", hash = "sha256:d1eaa46ebb595891b860ab086b4d09c8588af65ebd4361b8e8f4bb8920b90ba8", size = 123304, upload-time = "2026-10-15T09:50:58.343Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/40/9e/2b38731e0fc536806f16490e1a12d7f0dc2a1235aa8cc07bcc75416a7daa/pluggy-1.7.0-py3-none-any.whl", hash = "sha256:7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec", size = 27082, upload-time = "2026-10-15T09:50:56.808Z" },
+]
+
+[[package]]
+name = "privato"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "cryptography" },
+    { name = "fastapi" },
+    { name = "google-api-python-client" },
+    { name = "google-auth" },
+    { name = "httpx" },
+    { name = "libsql" },
+    { name = "mcp" },
+    { name = "openai-agents" },
+    { name = "pydantic-settings" },
+    { name = "pywebpush" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cryptography", specifier = ">=50.0.2" },
+    { name = "fastapi", specifier = ">=0.162.0" },
+    { name = "google-api-python-client", specifier = ">=2.201.0" },
+    { name = "google-auth", specifier = ">=2.62.0" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "libsql", specifier = ">=0.1.11" },
+    { name = "mcp", specifier = ">=2.3.0" },
+    { name = "openai-agents", specifier = ">=0.24.0" },
+    { name = "pydantic-settings", specifier = ">=2.16.2" },
+    { name = "pywebpush", specifier = ">=2.5.0" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.54.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=9.2.0" },
+    { name = "pytest-asyncio", specifier = ">=1.4.1" },
 ]
 
 [[package]]

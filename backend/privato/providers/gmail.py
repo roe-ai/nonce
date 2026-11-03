@@ -1,6 +1,6 @@
 """Gmail through the real API, with the user's OAuth refresh token.
 
-nonce never hands Gmail credentials to agents. Every search runs as
+Privato never hands Gmail credentials to agents. Every search runs as
 `(grant constraint) (agent query)`, so an agent can narrow a grant but never widen it.
 """
 

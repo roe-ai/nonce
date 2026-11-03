@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "nonce",
-    short_name: "nonce",
+    name: "Privato",
+    short_name: "Privato",
     description: "Approve what AI apps can see in your email, calendar, files and Slack.",
     start_url: "/",
     scope: "/",

@@ -1,6 +1,6 @@
 import { sessionUserId } from "./session";
 
-const API_URL = process.env.NONCE_API_URL ?? process.env.PRIVATY_API_URL ?? "http://localhost:8000";
+const API_URL = process.env.PRIVATO_API_URL ?? process.env.NONCE_API_URL ?? process.env.PRIVATY_API_URL ?? "http://localhost:8000";
 
 export type Signals = Record<string, number | string | boolean | string[]>;
 
@@ -49,7 +49,7 @@ export interface ConnectorTool {
   rule: ToolRule;
 }
 
-/** An MCP server or HTTP API the user added; nonce holds its key and makes every call. */
+/** An MCP server or HTTP API the user added; Privato holds its key and makes every call. */
 export interface Connector {
   id: string;
   source: string;
@@ -177,8 +177,8 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     cache: "no-store",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${process.env.NONCE_ADMIN_TOKEN ?? process.env.PRIVATY_ADMIN_TOKEN ?? ""}`,
-      ...(userId ? { "x-nonce-user": userId } : {}),
+      authorization: `Bearer ${process.env.PRIVATO_ADMIN_TOKEN ?? process.env.NONCE_ADMIN_TOKEN ?? process.env.PRIVATY_ADMIN_TOKEN ?? ""}`,
+      ...(userId ? { "x-privato-user": userId } : {}),
       ...init.headers,
     },
   });
@@ -191,4 +191,4 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export const apiUrl = API_URL;
 /** The address AI apps connect to; the public API address when the dashboard reaches the API privately. */
-export const mcpUrl = `${process.env.NONCE_PUBLIC_API_URL ?? process.env.PRIVATY_PUBLIC_API_URL ?? API_URL}/mcp`;
+export const mcpUrl = `${process.env.PRIVATO_PUBLIC_API_URL ?? process.env.NONCE_PUBLIC_API_URL ?? process.env.PRIVATY_PUBLIC_API_URL ?? API_URL}/mcp`;

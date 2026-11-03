@@ -1,4 +1,4 @@
-// nonce's service worker: shows Web Push alerts and opens the dashboard when one is tapped.
+// Privato's service worker: shows Web Push alerts and opens the dashboard when one is tapped.
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
@@ -12,7 +12,7 @@ self.addEventListener("push", (event) => {
   }
   event.waitUntil(
     (async () => {
-      await self.registration.showNotification(data.title || "nonce", {
+      await self.registration.showNotification(data.title || "Privato", {
         body: data.body || "",
         icon: "/icon-192.png",
         badge: "/badge-96.png",
@@ -20,7 +20,7 @@ self.addEventListener("push", (event) => {
         data: { url: data.url || "/" },
       });
       // Open dashboards pick up the new request without waiting for their next refresh.
-      for (const client of await self.clients.matchAll({ type: "window" })) client.postMessage({ type: "nonce:refresh" });
+      for (const client of await self.clients.matchAll({ type: "window" })) client.postMessage({ type: "privato:refresh" });
     })(),
   );
 });

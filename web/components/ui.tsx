@@ -97,7 +97,7 @@ export function Button({
   );
 }
 
-/** Apps with a logo in public/logos/<kind>.svg. Keep in sync with AgentKind in backend/nonce/main.py. */
+/** Apps with a logo in public/logos/<kind>.svg. Keep in sync with AgentKind in backend/privato/main.py. */
 export const KNOWN_APPS: Record<string, string> = {
   chatgpt: "ChatGPT",
   claude: "Claude",

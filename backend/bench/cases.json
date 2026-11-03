@@ -1,5 +1,5 @@
 {
-  "about": "Labeled cases for nonce detectors. Each case is scored on what policy.py does with the detector's signals in Standard mode: 'allow' means it should go through, 'stop' means it should be denied, revoked, withheld, or come to the user. Every case is one where the detector decides: no empty filters or over-limit durations, which policy stops on its own.",
+  "about": "Labeled cases for Privato detectors. Each case is scored on what policy.py does with the detector's signals in Standard mode: 'allow' means it should go through, 'stop' means it should be denied, revoked, withheld, or come to the user. Every case is one where the detector decides: no empty filters or over-limit durations, which policy stops on its own.",
   "grants": {
     "flight": {"source": "gmail", "category": "travel", "user_request": "When does my flight to Tokyo leave?", "justification": "Need the airline confirmation email", "granted_filter": "from:united.com Tokyo"},
     "hotel": {"source": "gmail", "category": "travel", "user_request": "What time can I check in at my hotel in Shinjuku?", "justification": "Need the hotel reservation email", "granted_filter": "Gracery reservation"},

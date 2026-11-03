@@ -110,9 +110,9 @@ def decide_access(
         if src.custom:
             deny.append(f"It asked for tools in {src.label} that you turned off or that don't exist ({', '.join(sorted(unknown))})")
         else:
-            deny.append(f"It asked for a kind of access nonce doesn't offer ({', '.join(sorted(unknown))})")
+            deny.append(f"It asked for a kind of access Privato doesn't offer ({', '.join(sorted(unknown))})")
     if ttl_s > s.hard_max_ttl_s:
-        deny.append(f"It wanted access for {human_duration(ttl_s)}, longer than nonce ever allows")
+        deny.append(f"It wanted access for {human_duration(ttl_s)}, longer than Privato ever allows")
     if signals and signals.get("crawl", 0) >= CRAWL_DENY:
         deny.append(f"It tried to collect {src.whole}")
     if deny:

@@ -81,7 +81,7 @@ async def _text(agent_id: str | None, title: str, body: str, approve_grant_id: s
         return
     tail = f"Allow or decline: {review_link(approve_grant_id)}" if approve_grant_id else settings().dashboard_url
     try:
-        await sms.send_text(user["phone"], f"nonce: {title}\n{body}\n\n{tail}")
+        await sms.send_text(user["phone"], f"Privato: {title}\n{body}\n\n{tail}")
     except httpx.HTTPError:
         log.exception("text message failed")
 

@@ -3,9 +3,9 @@ import re
 import httpx
 import pytest
 
-from nonce import broker, db, sms
-from nonce.main import app
-from nonce.notify import review_link
+from privato import broker, db, sms
+from privato.main import app
+from privato.notify import review_link
 
 from conftest import TEST_USER
 
@@ -13,7 +13,7 @@ ADMIN = {"Authorization": "Bearer test-admin"}
 
 
 def client(user_id: str | None = TEST_USER) -> httpx.AsyncClient:
-    headers = {**ADMIN, **({"X-Nonce-User": user_id} if user_id else {})}
+    headers = {**ADMIN, **({"X-Privato-User": user_id} if user_id else {})}
     return httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", headers=headers)
 
 
@@ -85,7 +85,7 @@ async def test_pending_request_texts_the_user_who_approves_from_the_link(agent, 
 
 
 async def test_texting_off_hides_the_phone_setting_and_sends_nothing(detector, agent, monkeypatch):
-    from nonce.config import settings
+    from privato.config import settings
 
     monkeypatch.setattr(settings(), "sms_enabled", False)
     sent = []

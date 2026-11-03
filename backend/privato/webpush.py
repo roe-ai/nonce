@@ -3,7 +3,7 @@
 Payloads are encrypted for each browser (RFC 8291), so Apple's and Google's push services
 carry them without reading them. Subscriptions the push service reports gone are dropped.
 
-Generate the server's keys once with `uv run python -m nonce.webpush` and set them as
+Generate the server's keys once with `uv run python -m privato.webpush` and set them as
 VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY.
 """
 
@@ -43,7 +43,7 @@ def _subject() -> str:
     s = settings()
     if s.vapid_subject:
         return s.vapid_subject
-    return s.dashboard_url if s.dashboard_url.startswith("https://") else "mailto:nonce@localhost"
+    return s.dashboard_url if s.dashboard_url.startswith("https://") else "mailto:privato@localhost"
 
 
 async def subscribe(user_id: str, endpoint: str, p256dh: str, auth: str, device: str | None) -> None:

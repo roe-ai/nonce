@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # Turso / libSQL. Unset → a local SQLite file, so the project runs with no account.
     turso_database_url: str | None = None
     turso_auth_token: str | None = None
-    local_db_path: str = str(BACKEND_DIR / "nonce.db")
+    local_db_path: str = str(BACKEND_DIR / "privato.db")
 
     # The detector that produces signals (see signals.py): an HTTP service or a Python class.
     # Neither → every decision that needs signals goes to the user.
@@ -36,10 +36,10 @@ class Settings(BaseSettings):
     luna_timeout_s: float = 8.0
 
     # Fernet key that encrypts provider credentials (Google refresh tokens, Slack tokens) at rest.
-    # PRIVATY_* names from before the rename still work.
-    nonce_encryption_key: str = Field(validation_alias=AliasChoices("NONCE_ENCRYPTION_KEY", "PRIVATY_ENCRYPTION_KEY"))
+    # NONCE_* and PRIVATY_* names from earlier names still work.
+    privato_encryption_key: str = Field(validation_alias=AliasChoices("PRIVATO_ENCRYPTION_KEY", "NONCE_ENCRYPTION_KEY", "PRIVATY_ENCRYPTION_KEY"))
     # Shared secret between the dashboard and this API; also signs approval links.
-    nonce_admin_token: str = Field(validation_alias=AliasChoices("NONCE_ADMIN_TOKEN", "PRIVATY_ADMIN_TOKEN"))
+    privato_admin_token: str = Field(validation_alias=AliasChoices("PRIVATO_ADMIN_TOKEN", "NONCE_ADMIN_TOKEN", "PRIVATY_ADMIN_TOKEN"))
 
     public_url: str = "http://localhost:8000"
     # Earlier public URLs: apps connected through them keep working without reconnecting.
@@ -74,7 +74,7 @@ class Settings(BaseSettings):
     ntfy_url: str = "https://ntfy.sh"
     ntfy_topic: str | None = None
 
-    # Web Push to the dashboard installed on a phone. Generate with `uv run python -m nonce.webpush`.
+    # Web Push to the dashboard installed on a phone. Generate with `uv run python -m privato.webpush`.
     vapid_public_key: str | None = None
     vapid_private_key: str | None = None
     # Contact for the push services; defaults to the dashboard's address.

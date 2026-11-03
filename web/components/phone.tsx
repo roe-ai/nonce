@@ -54,7 +54,7 @@ export function ServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" }).catch(() => {});
     const onMessage = (e: MessageEvent) => {
-      if (e.data?.type === "nonce:refresh" || e.data?.type === "privaty:refresh") router.refresh();
+      if (e.data?.type === "privato:refresh" || e.data?.type === "valet:refresh" || e.data?.type === "nonce:refresh" || e.data?.type === "privaty:refresh") router.refresh();
     };
     navigator.serviceWorker.addEventListener("message", onMessage);
     return () => navigator.serviceWorker.removeEventListener("message", onMessage);
@@ -135,7 +135,7 @@ function AddToHomeScreen({ ios }: { ios: boolean }) {
       </li>
       <li className="flex items-center gap-2">
         <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sidebar text-[11px] font-semibold text-ink">3</span>
-        Open nonce from your Home Screen and turn on notifications
+        Open Privato from your Home Screen and turn on notifications
       </li>
     </ol>
   ) : (
@@ -143,7 +143,7 @@ function AddToHomeScreen({ ios }: { ios: boolean }) {
   );
 }
 
-/** Settings: put nonce on this phone and get a notification when an app needs your OK. */
+/** Settings: put Privato on this phone and get a notification when an app needs your OK. */
 export function PhoneSetup({ pushKey }: { pushKey: string | null }) {
   const phone = usePhone();
   const { sub, permission, error, busy, turnOn, turnOff } = usePush(pushKey);
@@ -152,17 +152,17 @@ export function PhoneSetup({ pushKey }: { pushKey: string | null }) {
   if (phone.ios && !phone.installed) {
     return (
       <div className="space-y-3">
-        <p className="text-[13px] text-muted">On iPhone, notifications work once nonce is on your Home Screen.</p>
+        <p className="text-[13px] text-muted">On iPhone, notifications work once Privato is on your Home Screen.</p>
         <AddToHomeScreen ios />
       </div>
     );
   }
-  if (!phone.pushable) return <p className="text-[13px] text-muted">This browser can&apos;t show notifications from nonce.</p>;
+  if (!phone.pushable) return <p className="text-[13px] text-muted">This browser can&apos;t show notifications from privato.</p>;
   if (!pushKey) return <p className="text-[13px] text-muted">Notifications aren&apos;t set up on this server yet.</p>;
   if (permission === "denied") {
     return (
       <p className="text-[13px] text-muted">
-        Notifications are blocked for nonce. Turn them on in your {phone.ios ? "iPhone's Settings → Notifications → nonce" : "browser's site settings"}, then come back.
+        Notifications are blocked for Privato. Turn them on in your {phone.ios ? "iPhone's Settings → Notifications → Privato" : "browser's site settings"}, then come back.
       </p>
     );
   }
@@ -198,9 +198,9 @@ export function PhoneSetup({ pushKey }: { pushKey: string | null }) {
   );
 }
 
-const DISMISSED = "nonce:phone-nudge-dismissed";
+const DISMISSED = "privato:phone-nudge-dismissed";
 
-/** Home, on a phone: a nudge to install nonce, then to turn on notifications. */
+/** Home, on a phone: a nudge to install Privato, then to turn on notifications. */
 export function PhoneNudge({ pushKey }: { pushKey: string | null }) {
   const phone = usePhone();
   const { sub, busy, error, turnOn } = usePush(pushKey);
@@ -226,7 +226,7 @@ export function PhoneNudge({ pushKey }: { pushKey: string | null }) {
       >
         <X size={14} />
       </button>
-      <p className="font-display text-[19px]">{needsInstall ? "Keep nonce on your phone" : "Get a tap when an app asks"}</p>
+      <p className="font-display text-[19px]">{needsInstall ? "Keep Privato on your phone" : "Get a tap when an app asks"}</p>
       <p className="mt-0.5 mb-3 text-[13px] text-muted">
         {needsInstall ? "Add it to your Home Screen to approve requests in one tap." : "Turn on notifications so requests reach you right away."}
       </p>

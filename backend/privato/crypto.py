@@ -16,16 +16,16 @@ def hash_token(token: str) -> str:
 
 
 def encrypt(plaintext: str) -> str:
-    return Fernet(settings().nonce_encryption_key.encode()).encrypt(plaintext.encode()).decode()
+    return Fernet(settings().privato_encryption_key.encode()).encrypt(plaintext.encode()).decode()
 
 
 def decrypt(ciphertext: str) -> str:
-    return Fernet(settings().nonce_encryption_key.encode()).decrypt(ciphertext.encode()).decode()
+    return Fernet(settings().privato_encryption_key.encode()).decrypt(ciphertext.encode()).decode()
 
 
 def sign(*parts: str) -> str:
     msg = "|".join(parts).encode()
-    return hmac.new(settings().nonce_admin_token.encode(), msg, hashlib.sha256).hexdigest()[:32]
+    return hmac.new(settings().privato_admin_token.encode(), msg, hashlib.sha256).hexdigest()[:32]
 
 
 def verify(sig: str, *parts: str) -> bool:

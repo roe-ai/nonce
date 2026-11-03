@@ -1,7 +1,7 @@
 """Grants and data calls. REST and MCP are both thin layers over these functions.
 
 A grant has a short TTL and a call budget, and can be revoked at any time. The user's
-credentials never leave nonce: the agent holds an opaque grant token, and nonce runs
+credentials never leave Privato: the agent holds an opaque grant token, and Privato runs
 the Gmail, Calendar, Drive or Slack calls, or the tools on a connector the user added.
 """
 
@@ -53,7 +53,7 @@ def use_provider(p: Provider | None, source_id: str = "gmail", account: str | No
 
 
 async def create_agent(user_id: str, name: str, kind: str = "custom") -> tuple[dict, str]:
-    key = new_token("nonce_agent")
+    key = new_token("privato_agent")
     row = await db.insert(
         "agents",
         {
@@ -72,8 +72,8 @@ async def create_agent(user_id: str, name: str, kind: str = "custom") -> tuple[d
 
 async def authenticate(key: str | None) -> dict:
     if not key:
-        raise AccessError("unauthenticated", "Missing agent key (Authorization: Bearer nonce_agent_…)", 401)
-    if key.startswith(("nonce_at_", "pvt_at_")):
+        raise AccessError("unauthenticated", "Missing agent key (Authorization: Bearer privato_agent_…)", 401)
+    if key.startswith(("privato_at_", "valet_at_", "nonce_at_", "pvt_at_")):
         agent = await oauth.agent_for_access_token(key)
     else:
         agent = await db.one("SELECT * FROM agents WHERE key_hash = ?", hash_token(key))
@@ -136,7 +136,7 @@ async def _target(
         if not row or row["user_id"] != agent["user_id"]:
             raise AccessError("bad_request", f"Unknown source '{source_id}'. Call list_sources to see what you can ask for.", 400)
         if row["status"] != "active":
-            raise AccessError("connector_paused", f"The user paused {row['name']} in nonce", 409)
+            raise AccessError("connector_paused", f"The user paused {row['name']} in Privato", 409)
         src = connectors.as_source(row)
         auto = sorted(src.tools - src.ask_tools)
         return src, row["id"], row["name"], False, scopes or auto or sorted(src.tools), None
@@ -167,7 +167,7 @@ def offline_hours(user: dict | None) -> tuple[int, int]:
 
 
 async def _past_questions(user_id: str) -> list[dict]:
-    """Requests you allowed (or nonce allowed for you), newest first."""
+    """Requests you allowed (or Privato allowed for you), newest first."""
     rows = await db.q(
         """SELECT g.id, g.user_request, g.source, g.created_at FROM grants g JOIN agents a ON a.id = g.agent_id
         WHERE a.user_id = ? AND g.activated_at IS NOT NULL ORDER BY g.created_at DESC LIMIT ?""",
@@ -221,10 +221,10 @@ def _grant_view(grant: dict, token: str | None = None) -> dict:
         "active": f"Call connector_call with this grant_token and one of these tools: {', '.join(grant['scopes'])}."
         if src.custom
         else f"Call {src.id}_search with this grant_token. Searches are limited to query_constraint.",
-        "pending": "Waiting for the user to approve in nonce. Tell them in one line, then end your turn with a "
+        "pending": "Waiting for the user to approve in Privato. Tell them in one line, then end your turn with a "
         '"Check approval and continue" button or quick reply (or ask them to reply "continue"). '
         "When they continue, call check_access with this grant_token and resume their original question.",
-        "denied": "Do not retry with a broader request. Tell the user nonce denied access and why.",
+        "denied": "Do not retry with a broader request. Tell the user Privato denied access and why.",
         "revoked": "Access ended. Ask the user before requesting access again.",
         "expired": "Access expired. Request access again if the user still needs it.",
     }[grant["status"]]
@@ -279,7 +279,7 @@ async def request_access(
         # Luna usually finishes alongside the signals read; past a short grace the task keeps its claimed place.
         await asyncio.wait([refining], timeout=TASK_GRACE_S)
     task_id = await tasks.resolve(task_id)
-    token = new_token("nonce_grant")
+    token = new_token("privato_grant")
     now = db.now()
     grant = await db.insert(
         "grants",
@@ -443,7 +443,7 @@ async def deny(grant_id: str, by: str = "user") -> None:
     await _event("access.deny", "deny", grant_id=grant_id, reason=f"denied by {by}")
 
 
-async def revoke(grant_id: str, reason: str, by: str = "nonce") -> None:
+async def revoke(grant_id: str, reason: str, by: str = "privato") -> None:
     grant = await db.one("SELECT * FROM grants WHERE id = ?", grant_id)
     if not grant or grant["status"] not in ("active", "pending"):
         return
@@ -561,7 +561,7 @@ async def search(agent: dict, source_id: str, grant_token: str, query: str = "",
     if decision.outcome == "revoke":
         await _event(action, "revoke", agent=agent, grant_id=grant["id"], reason=decision.reason, detail=detail, signals=signals, started=started)
         await _revoke_and_alert(agent, grant, decision.reason, f"Stopped {agent['name']}")
-        raise AccessError("grant_revoked", f"nonce revoked this grant: {decision.reason}. Tell the user.")
+        raise AccessError("grant_revoked", f"Privato revoked this grant: {decision.reason}. Tell the user.")
 
     conns = await _accounts_for(agent["user_id"], grant)
     batches = await asyncio.gather(*(_provider_for(c).search(grant["query_constraint"], query, limit) for c in conns))
@@ -600,7 +600,7 @@ async def read(agent: dict, source_id: str, grant_token: str, item_id: str) -> d
         reason = f"It tried to open {src.items} it wasn't given"
         await _event(action, "revoke", agent=agent, grant_id=grant["id"], reason=reason, detail={"item_id": item_id}, started=started)
         await _revoke_and_alert(agent, grant, reason, f"Stopped {agent['name']}")
-        raise AccessError("grant_revoked", f"nonce revoked this grant: {reason}.")
+        raise AccessError("grant_revoked", f"Privato revoked this grant: {reason}.")
 
     with_content = src.content_scope in grant["scopes"]
     conn_id, tagged, raw_id = item_id.partition(ITEM_SEP)
@@ -697,7 +697,7 @@ async def connector_call(agent: dict, grant_token: str, tool: str, arguments: di
     if decision.outcome == "revoke":
         await _event(action, "revoke", agent=agent, grant_id=grant["id"], reason=decision.reason, detail=detail, signals=signals, started=started)
         await _revoke_and_alert(agent, grant, decision.reason, f"Stopped {agent['name']}")
-        raise AccessError("grant_revoked", f"nonce revoked this grant: {decision.reason}. Tell the user.")
+        raise AccessError("grant_revoked", f"Privato revoked this grant: {decision.reason}. Tell the user.")
 
     text, is_error = await connectors.call(row, tool, arguments)
     outcome, reason = decision.outcome, decision.reason

@@ -4,8 +4,8 @@ import json
 
 import httpx
 
-from nonce import broker, signals
-from nonce.config import settings
+from privato import broker, signals
+from privato.config import settings
 
 
 class PluggedIn:

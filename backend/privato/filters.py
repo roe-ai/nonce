@@ -1,7 +1,7 @@
 """Filters for sources without a safe native query language (Calendar, Drive), and checks for Slack.
 
 A grant's filter and an agent's search are parsed separately and combined with AND:
-every word must match, every field must match, and date windows intersect. nonce
+every word must match, every field must match, and date windows intersect. Privato
 builds the provider query itself, so a search can narrow a grant but never widen it.
 """
 

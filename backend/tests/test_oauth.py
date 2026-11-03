@@ -5,17 +5,17 @@ from urllib.parse import parse_qs, urlparse
 
 import httpx
 
-from nonce import broker
-from nonce.config import settings
-from nonce.main import app
-from nonce.mcp_server import mcp
-from nonce.oauth import NonceOAuthProvider
+from privato import broker
+from privato.config import settings
+from privato.main import app
+from privato.mcp_server import mcp
+from privato.oauth import PrivatoOAuthProvider
 
 from conftest import TEST_USER
 
 BASE = "http://localhost:8000"
 REDIRECT = "https://chatgpt.com/connector_platform_oauth_redirect"
-ADMIN = {"Authorization": "Bearer test-admin", "X-Nonce-User": TEST_USER}
+ADMIN = {"Authorization": "Bearer test-admin", "X-Privato-User": TEST_USER}
 
 
 def http() -> httpx.AsyncClient:
@@ -161,8 +161,8 @@ async def test_moving_the_public_url_keeps_apps_connected_through_old_urls(monke
     async with http() as c:
         _, tokens = await connect(c)
     s = settings()
-    monkeypatch.setattr(s, "public_url", "https://api.nonce.example")
-    provider = NonceOAuthProvider()
+    monkeypatch.setattr(s, "public_url", "https://api.privato.example")
+    provider = PrivatoOAuthProvider()
     assert await provider.load_access_token(tokens["access_token"]) is None
     monkeypatch.setattr(s, "old_public_urls", [BASE])
     assert await provider.load_access_token(tokens["access_token"]) is not None

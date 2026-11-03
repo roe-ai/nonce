@@ -1,7 +1,7 @@
 import pytest
 
-from nonce import broker, db
-from nonce.errors import AccessError
+from privato import broker, db
+from privato.errors import AccessError
 
 from conftest import TEST_USER
 

@@ -1,10 +1,10 @@
-"""Your own MCP servers and HTTP APIs, tunneled through nonce.
+"""Your own MCP servers and HTTP APIs, tunneled through Privato.
 
-You add a server's URL and (optionally) the header it needs. nonce keeps the header encrypted,
+You add a server's URL and (optionally) the header it needs. Privato keeps the header encrypted,
 lists the server's tools, and makes every call itself, under the same grants, approvals and
 checks as Gmail or Slack. Apps never see the URL's credentials.
 
-Each tool has a rule: "auto" (nonce decides, like any request), "ask" (you approve every
+Each tool has a rule: "auto" (Privato decides, like any request), "ask" (you approve every
 grant that includes it; the default for tools that can change things) or "off".
 """
 
@@ -82,7 +82,7 @@ def use_http_transport(transport: httpx.AsyncBaseTransport | None) -> None:
 
 
 # ---------------------------------------------------------------------------
-# URLs: only public https hosts, so a connector can't reach nonce's own network.
+# URLs: only public https hosts, so a connector can't reach Privato's own network.
 
 
 def _dev_local(host: str) -> bool:
@@ -109,7 +109,7 @@ async def check_url(url: str) -> None:
     for info in infos:
         ip = ipaddress.ip_address(info[4][0])
         if not ip.is_global or ip.is_multicast:
-            raise AccessError("bad_url", f"{host} points to a private network address, which nonce won't call", 400)
+            raise AccessError("bad_url", f"{host} points to a private network address, which Privato won't call", 400)
 
 
 # ---------------------------------------------------------------------------
@@ -308,7 +308,7 @@ async def _call_http(row: dict, tool: str, arguments: dict) -> tuple[str, bool]:
 async def call(row: dict, tool: str, arguments: dict) -> tuple[str, bool]:
     text, is_error = await (_call_http if row["kind"] == "http" else _call_mcp)(row, tool, arguments)
     if len(text) > OUTPUT_MAX:
-        text = text[:OUTPUT_MAX] + f"\n[Cut by nonce: {len(text) - OUTPUT_MAX} more characters]"
+        text = text[:OUTPUT_MAX] + f"\n[Cut by Privato: {len(text) - OUTPUT_MAX} more characters]"
     return text, is_error
 
 

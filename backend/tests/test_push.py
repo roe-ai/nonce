@@ -3,13 +3,13 @@ import json
 import httpx
 import pytest
 
-from nonce import broker, db, webpush
-from nonce.config import settings
-from nonce.main import app
+from privato import broker, db, webpush
+from privato.config import settings
+from privato.main import app
 
 from conftest import TEST_USER
 
-ADMIN = {"Authorization": "Bearer test-admin", "X-Nonce-User": TEST_USER}
+ADMIN = {"Authorization": "Bearer test-admin", "X-Privato-User": TEST_USER}
 PHONE = {"endpoint": "https://web.push.apple.com/abc", "keys": {"p256dh": "BPk", "auth": "au"}, "device": "iPhone"}
 
 

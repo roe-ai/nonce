@@ -1,8 +1,8 @@
-"""Google OAuth for two things: signing in to nonce, and connecting Gmail, Calendar or Drive.
+"""Google OAuth for two things: signing in to Privato, and connecting Gmail, Calendar or Drive.
 
 Both redirect to the dashboard root (the one URI registered with Google), which hands
 the code back here. The `state` prefix tells the dashboard which flow it is.
-nonce stores the refresh tokens encrypted; agents never see them.
+Privato stores the refresh tokens encrypted; agents never see them.
 """
 
 import json
@@ -114,7 +114,7 @@ async def complete_login(code: str, state: str, nonce: str) -> dict:
         },
     )
     if first:
-        # Whoever ran nonce before accounts existed keeps their apps and connections.
+        # Whoever ran Privato before accounts existed keeps their apps and connections.
         await db.q("UPDATE agents SET user_id = ? WHERE user_id IS NULL", user["id"])
         await db.q("UPDATE connections SET user_id = ? WHERE user_id IS NULL", user["id"])
     return {**user, "created": True}
@@ -160,7 +160,7 @@ async def complete_connect(user: dict, code: str, state: str) -> dict:
                 "provider_unavailable", f"Google didn't let us in. Make sure the {API_NAMES[provider]} is enabled for this app.", 400
             )
     if "refresh_token" not in tokens:
-        raise AccessError("no_refresh_token", "Google returned no refresh token; remove nonce from your Google account and reconnect", 400)
+        raise AccessError("no_refresh_token", "Google returned no refresh token; remove Privato from your Google account and reconnect", 400)
     return await accounts.save(
         user["id"], provider, "google", account_of(probe.json()), encrypt(json.dumps({"refresh_token": tokens["refresh_token"]}))
     )

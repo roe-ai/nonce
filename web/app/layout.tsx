@@ -6,9 +6,9 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const serif = Instrument_Serif({ variable: "--font-serif", subsets: ["latin"], weight: "400", style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
-  title: "nonce",
+  title: "Privato",
   description: "Let AI help with your email, calendar, files and Slack without handing it the keys.",
-  appleWebApp: { capable: true, title: "nonce", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Privato", statusBarStyle: "default" },
   icons: { apple: "/apple-touch-icon.png" },
 };
 

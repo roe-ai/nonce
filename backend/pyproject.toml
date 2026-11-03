@@ -1,8 +1,8 @@
 [project]
-name = "nonce"
+name = "privato"
 version = "0.1.0"
 license = "AGPL-3.0-only"
-description = "nonce: just-in-time, monitored access to your personal data for AI agents"
+description = "Privato: just-in-time, monitored access to your personal data for AI agents"
 requires-python = ">=3.12"
 dependencies = [
     "cryptography>=50.0.2",
@@ -35,4 +35,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["nonce"]
+packages = ["privato"]

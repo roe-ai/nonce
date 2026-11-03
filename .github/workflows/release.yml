@@ -40,4 +40,4 @@ jobs:
         run: |
           v="${GITHUB_REF_NAME#v}"
           awk -v v="$v" '/^## \[/ { on = index($0, "[" v "]") > 0; next } /^\[[^]]+\]: / { next } on' CHANGELOG.md > notes.md
-          gh release create "$GITHUB_REF_NAME" --title "nonce $GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+          gh release create "$GITHUB_REF_NAME" --title "Privato $GITHUB_REF_NAME" --notes-file notes.md --verify-tag

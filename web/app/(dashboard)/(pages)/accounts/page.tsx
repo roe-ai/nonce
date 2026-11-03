@@ -80,7 +80,7 @@ function ToolRow({ connector, tool }: { connector: Connector; tool: ConnectorToo
       </div>
       {tool.suspicious ? (
         <p className="flex items-start gap-1.5 text-[12.5px] text-amber-800">
-          <AlertTriangle size={13} className="mt-0.5 shrink-0" /> Its description tried to give AI apps instructions, so nonce hid it and turned this tool off.
+          <AlertTriangle size={13} className="mt-0.5 shrink-0" /> Its description tried to give AI apps instructions, so Privato hid it and turned this tool off.
         </p>
       ) : (
         tool.description && <p className="line-clamp-2 text-[13px] text-muted">{tool.description}</p>
@@ -122,7 +122,7 @@ function ConnectorCard({ connector }: { connector: Connector }) {
           <p className="mt-0.5 flex items-center gap-1.5 truncate text-[12px] text-muted">
             <Dot tone={paused ? "gray" : connector.error ? "amber" : "green"} />
             {paused ? "Paused" : `${on} of ${connector.tools.length} tools on`} · {host}
-            {connector.auth_header && ` · ${connector.auth_header} kept by nonce`}
+            {connector.auth_header && ` · ${connector.auth_header} kept by Privato`}
           </p>
         </div>
         <div className="-mr-2 flex flex-wrap items-center">
@@ -170,7 +170,7 @@ export default async function AccountsPage({
 
   return (
     <>
-      <PageHeader title="Accounts" description="Your accounts stay with nonce. AI apps never get your password or login." />
+      <PageHeader title="Accounts" description="Your accounts stay with Privato. AI apps never get your password or login." />
       {connected && (
         <p className="mb-6 rounded-lg bg-emerald-50 px-4 py-2.5 text-[13px] text-emerald-800">{source(connected).label} is connected and protected.</p>
       )}
@@ -215,7 +215,7 @@ export default async function AccountsPage({
 
       <Section title="Your connectors">
         <p className="-mt-1 mb-3 text-[13px] text-muted">
-          Add your own MCP server or API. Apps reach it only through nonce, with the same approvals, limits and checks as your email.
+          Add your own MCP server or API. Apps reach it only through Privato, with the same approvals, limits and checks as your email.
         </p>
         <div className="space-y-3">
           {connectors.map((c) => (

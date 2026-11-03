@@ -1,7 +1,7 @@
 """Slack, through a user token with read-only search and history scopes.
 
-Slack's search already ANDs terms and has no OR, so nonce sends `constraint query`.
-In case Slack ever treats repeated `in:` or `from:` loosely, nonce also checks the
+Slack's search already ANDs terms and has no OR, so Privato sends `constraint query`.
+In case Slack ever treats repeated `in:` or `from:` loosely, Privato also checks the
 channel, author and dates of every result against both filters before an agent sees it.
 """
 
@@ -78,7 +78,7 @@ class Slack:
         body = res.json()
         if not body.get("ok"):
             if body.get("error") in ("invalid_auth", "token_revoked", "account_inactive"):
-                raise AccessError("no_connection", "Slack access was revoked. Ask the user to reconnect Slack in nonce.", 409)
+                raise AccessError("no_connection", "Slack access was revoked. Ask the user to reconnect Slack in Privato.", 409)
             raise AccessError("provider_error", f"Slack said: {body.get('error', 'unknown error')}", 502)
         return body
 

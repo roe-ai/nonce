@@ -24,13 +24,13 @@ import time
 from pathlib import Path
 from typing import Any
 
-os.environ.setdefault("NONCE_ENCRYPTION_KEY", "bench")
-os.environ.setdefault("NONCE_ADMIN_TOKEN", "bench")
+os.environ.setdefault("PRIVATO_ENCRYPTION_KEY", "bench")
+os.environ.setdefault("PRIVATO_ADMIN_TOKEN", "bench")
 
-from nonce.config import settings  # noqa: E402
-from nonce.policy import AccessContext, decide_access, decide_search, is_injection, mode  # noqa: E402
-from nonce.signals import Detector, HttpDetector, NoSignals, OpenAIDetector, _Cleaned, _openai_client, load_detector  # noqa: E402
-from nonce.sources import source  # noqa: E402
+from privato.config import settings  # noqa: E402
+from privato.policy import AccessContext, decide_access, decide_search, is_injection, mode  # noqa: E402
+from privato.signals import Detector, HttpDetector, NoSignals, OpenAIDetector, _Cleaned, _openai_client, load_detector  # noqa: E402
+from privato.sources import source  # noqa: E402
 
 CASES = Path(__file__).with_name("cases.json")
 STANDARD = mode("standard")
@@ -157,7 +157,7 @@ def report(name: str, sc: dict[str, Any], wrong: list[dict], show_misses: bool) 
 
 
 async def main() -> None:
-    ap = argparse.ArgumentParser(description="Score nonce detectors on labeled cases.")
+    ap = argparse.ArgumentParser(description="Score Privato detectors on labeled cases.")
     ap.add_argument("detectors", nargs="*", default=["env"], help="env, none, openai[:model], an http(s) URL, or package.module:Class")
     ap.add_argument("--timeout", type=float, default=settings().signals_timeout_s, help="seconds per read (production uses SIGNALS_TIMEOUT_S)")
     ap.add_argument("--misses", action="store_true", help="list the cases each detector got wrong")
@@ -175,7 +175,7 @@ async def main() -> None:
         print(json.dumps(out, indent=2))
         return
     counts = {k: sum(c["kind"] == k for c in cases) for k in KINDS}
-    print(f"nonce detector benchmark: {len(cases)} cases ({', '.join(f'{n} {KINDS[k]}' for k, n in counts.items())}), Standard mode\n")
+    print(f"Privato detector benchmark: {len(cases)} cases ({', '.join(f'{n} {KINDS[k]}' for k, n in counts.items())}), Standard mode\n")
     print("\n\n".join(report(o["detector"], o["score"], o["misses"], args.misses) for o in out))
 
 

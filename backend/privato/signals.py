@@ -1,5 +1,5 @@
 """Signals: the measurements policy decides on. A detector produces them; `policy.py` turns them
-into allow / ask / deny / revoke. nonce asks for three kinds:
+into allow / ask / deny / revoke. Privato asks for three kinds:
 
 - access: a new request. State: agent, data_source, account, user_request, justification, filter,
   scopes, requested_duration_minutes, and in Cautious mode previous_requests (past questions).
@@ -14,7 +14,7 @@ into allow / ask / deny / revoke. nonce asks for three kinds:
 Pick a detector (the first one set wins):
 
 - SIGNALS_DETECTOR: a Python class ("package.module:Class") with async access, search and content.
-- SIGNALS_URL: an HTTP service. nonce POSTs {"kind": "access" | "search" | "content", "state": {...}}
+- SIGNALS_URL: an HTTP service. Privato POSTs {"kind": "access" | "search" | "content", "state": {...}}
   with `Authorization: Bearer SIGNALS_API_KEY` and reads the signals object it returns.
 - OPENAI_API_KEY (or the Azure settings): OpenAI's Decisions API with SIGNALS_MODEL, asking the
   questions below. OPENAI_BASE_URL points it at any compatible endpoint.

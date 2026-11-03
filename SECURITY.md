@@ -1,6 +1,6 @@
 # Security
 
-nonce guards access to people's email, calendars, files and chats, so we take reports seriously.
+Privato guards access to people's email, calendars, files and chats, so we take reports seriously.
 
 ## Reporting a vulnerability
 

@@ -1,4 +1,4 @@
-"""Google Drive, read-only. nonce compiles the grant's filter and the agent's search into one
+"""Google Drive, read-only. Privato compiles the grant's filter and the agent's search into one
 Drive query joined with `and`, quoting every value, so an agent can't inject `or`."""
 
 import asyncio
@@ -127,7 +127,7 @@ class GoogleDrive:
             elif mime.startswith("text/") or mime in ("application/json", "application/xml"):
                 raw = svc.files().get_media(fileId=item_id).execute()
             else:
-                return _file(meta, f"[nonce can't read the text of this kind of file yet ({mime}).]")
+                return _file(meta, f"[Privato can't read the text of this kind of file yet ({mime}).]")
             text = raw.decode(errors="replace") if isinstance(raw, bytes) else str(raw)
             return _file(meta, text[:MAX_CHARS])
 

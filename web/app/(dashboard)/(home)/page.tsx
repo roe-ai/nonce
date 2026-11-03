@@ -62,10 +62,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         <BrandMark height={28} className="mb-6" />
         <h1 className="font-display text-[40px] leading-tight tracking-[-0.01em]">AI sees what it needs. Nothing else.</h1>
         <p className="mt-2 max-w-md text-muted">
-          Connect your accounts to nonce. AI apps only see what they need, only when you ask, and only for a few minutes.
+          Connect your accounts to Privato. AI apps only see what they need, only when you ask, and only for a few minutes.
         </p>
         <Link href="/welcome" className="mt-7 inline-flex h-9 items-center gap-1.5 rounded-lg bg-ink px-4 text-[13px] font-medium text-white hover:bg-black">
-          Set up nonce <ArrowRight size={14} />
+          Set up Privato <ArrowRight size={14} />
         </Link>
       </div>
     );
@@ -88,7 +88,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           className="flex items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 text-[13px] shadow-[0_10px_28px_-16px_rgba(60,40,20,0.35)] ring-1 ring-line hover:bg-sidebar"
         >
           <span>
-            <span className="font-medium">Finish setting up.</span> <span className="text-muted">Add nonce to ChatGPT, Claude or another AI app.</span>
+            <span className="font-medium">Finish setting up.</span> <span className="text-muted">Add Privato to ChatGPT, Claude or another AI app.</span>
           </span>
           <ArrowRight size={14} className="shrink-0" />
         </Link>
